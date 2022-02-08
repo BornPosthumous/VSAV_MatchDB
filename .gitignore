@@ -1,0 +1,4 @@
+__pycache__/
+/.vscode/
+matchdb_be/
+.env
