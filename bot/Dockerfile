@@ -24,5 +24,5 @@ RUN poetry config virtualenvs.create false \
 COPY . /code
 
 WORKDIR /code
-
+EXPOSE 8080
 CMD poetry run python main.py

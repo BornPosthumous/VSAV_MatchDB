@@ -100,4 +100,4 @@ async def on_message(message):
 keep_alive()
 
 load_dotenv()
-client.run(os.getenv('TOKEN'))
+client.run(os.environ['TOKEN'])
