@@ -24,8 +24,7 @@ from commands import (
 from help_command import get_help_command_text
 # create discord client
 client = discord.Client()
-# we need to ping repl.it to keep the bot alive
-from keep_alive import keep_alive
+
 
 
 # Get the database instance, we re do this on every command so it is up to date
@@ -95,7 +94,5 @@ async def on_message(message):
           await message.channel.send(
             'Results:\n {0}'.format(val)
             )
-
-keep_alive()
 
 client.run(os.environ['TOKEN'])
