@@ -5,7 +5,6 @@ import sys
 # python registry libraries
 import discord
 from tinydb import TinyDB
-from dotenv import load_dotenv
 
 #local libraries
 from pretty_print import pretty_print_results
@@ -99,5 +98,4 @@ async def on_message(message):
 
 keep_alive()
 
-load_dotenv()
 client.run(os.environ['TOKEN'])
