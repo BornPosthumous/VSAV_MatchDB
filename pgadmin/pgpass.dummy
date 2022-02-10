@@ -1,0 +1,2 @@
+# hostname:port:database:username:password
+0.0.0.0:5432:your_db_name:your_username:your_password

@@ -1,0 +1,15 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "your_db_name_from_env_dot_db",
+        "Group": "Servers",
+        "Host": "postgres",
+        "Port": 5432,
+        "MaintenanceDB": "postgres",
+        "Username": "username_from_env_dot_db",
+        "SSLMode": "prefer",
+        "PassFile": "/pgpass"
+      }
+    }
+  }
+  

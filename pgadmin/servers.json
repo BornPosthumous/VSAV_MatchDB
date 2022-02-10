@@ -1,0 +1,15 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "vsav_info",
+        "Group": "Servers",
+        "Host": "postgres",
+        "Port": 5432,
+        "MaintenanceDB": "postgres",
+        "Username": "leilei",
+        "SSLMode": "prefer",
+        "PassFile": "/pgpass"
+      }
+    }
+  }
+  

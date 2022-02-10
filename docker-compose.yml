@@ -1,13 +1,57 @@
-version: '3'
+version: '3.8'
 
 services:
   bot:
     build: ./bot
-    # environment:
-    #   - TOKEN=${TOKEN}
+    depends_on:
+      - postgres
     env_file:
-      - .env
+      - ./.env.bot
     volumes: 
       - ./bot:/usr/src/app
     ports: 
       - 8888:80
+
+  postgres:
+    container_name: postgres_container
+    hostname: psqlhost
+    restart: always
+    image: postgres:14.1-alpine
+    volumes:
+      - matchdb-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - .env.db
+
+  pgadmin:
+    image: dpage/pgadmin4:6.2
+    restart: unless-stopped
+    env_file:
+      - .env.pgadmin
+    tty: true
+    depends_on:
+      - postgres
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json # preconfigured servers/connections   
+      - ./pgadmin/pgpass:/pgadmin4/pgpass # passwords for the connections in this file
+    # Keeping this here for future reference
+    # https://stackoverflow.com/questions/66578506/where-is-the-pgpass-file-in-pgadmin4-docker-container-when-this-file-is-mounted/69258794#69258794
+    # entrypoint: >
+    #   /bin/sh -c "
+    #   mkdir -m 700 /var/lib/pgadmin/storage/jedah_dohma_makai.com;
+    #   chown -R postgres:postgres /var/lib/pgadmin/storage/jedah_dohma_makai.com;
+    #   cp -prv /pgadmin4/pgpass /var/lib/pgadmin/storage/jedah_dohma_makai.com/;
+    #   chmod 600 /var/lib/pgadmin/storage/jedah_dohma_makai.com/pgpass;
+    #   /entrypoint.sh
+    #   " 
+    links:
+      - "postgres:pgsql-server"
+volumes:
+  matchdb-data:
+    driver: local
+  pgadmin-data:
+    driver: local
