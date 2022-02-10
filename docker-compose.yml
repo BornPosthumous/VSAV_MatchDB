@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  bot:
-    build: ./bot
-    depends_on:
-      - postgres
-    env_file:
-      - ./.env.bot
-    volumes: 
-      - ./bot:/usr/src/app
-    ports: 
-      - 8888:80
-
   postgres:
     container_name: postgres_container
     hostname: psqlhost
@@ -23,6 +12,24 @@ services:
       - 5432:5432
     env_file:
       - .env.db
+
+  api:
+    build: ./api
+    depends_on:
+      - postgres
+    env_file: 
+      ./.env.api
+    ports: 
+      - 7000:7000
+
+  bot:
+    build: ./bot
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env.bot
+    volumes: 
+      - ./bot:/usr/src/app
 
   pgadmin:
     image: dpage/pgadmin4:6.2
