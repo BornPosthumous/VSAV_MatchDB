@@ -7,25 +7,18 @@ Type $help to see all features!
 ## Installation / Setup
 
 1) Create a discord bot account, and find your token. [Read Instructions Here](https://www.freecodecamp.org/news/create-a-discord-bot-with-python/).
-1) Create a .env file in the root directory with the line.
 
-		TOKEN=mydiscordbottoken
+2) Change all .dummy files to have your desired configuration. All dummy info should point you to the correct information to input.
 
-### Docker
+.env.bot --> insert discord token
+.env.db --> postgres db configuration
+.env.pgadmin --> postgres admin configuration
+pgadmin/servers.json --> postgres database configuration
+pgadmin/pgpass --> postgress login information
 
-1) Build the Image (in root directory):
-	
-		docker build -t matchdb .
+### Running
+Run with Docker-Compose in root directory
+	docker-compose up
 
-2) Run Image
+PGAdmin should be on http://localhost:8080
 
-		docker run matchdb
-
-### Poetry
-1. [Install Poetry](https://python-poetry.org/) 
-2. Install Dependencies via Poetry  
-
-		poetry install
-3. Run:
-
-		poetry run python main.py
