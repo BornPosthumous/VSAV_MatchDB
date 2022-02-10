@@ -10,15 +10,15 @@ Type $help to see all features!
 
 2) Change all .dummy files to have your desired configuration. All dummy info should point you to the correct information to input.
 
-	.env.bot --> insert discord token
+		.env.bot --> insert discord token
 
-	.env.db --> postgres db configuration
+		.env.db --> postgres db configuration
 
-	.env.pgadmin --> postgres admin configuration
+		.env.pgadmin --> postgres admin configuration
 
-	pgadmin/servers.json --> postgres database configuration
+		pgadmin/servers.json --> postgres database configuration
 
-	pgadmin/pgpass --> postgress login information
+		pgadmin/pgpass --> postgress login information
 
 ## Running
 Run with Docker-Compose in root directory
