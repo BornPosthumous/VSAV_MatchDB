@@ -22,3 +22,4 @@ Run with Docker-Compose in root directory
 
 PGAdmin should be on http://localhost:8080
 
+Discord bot should be connected if your token and bot setup is correct.
