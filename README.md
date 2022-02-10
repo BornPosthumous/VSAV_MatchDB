@@ -8,7 +8,7 @@ Type $help to see all features!
 
 1) Create a discord bot account, and find your token. [Read Instructions Here](https://www.freecodecamp.org/news/create-a-discord-bot-with-python/).
 
-2) Change all .dummy files to have your desired configuration. All dummy info should point you to the correct information to input.
+2) Change all .dummy files to have your desired configuration. All dummy info should point you to the correct information to input. Remove .dummy extension.
 
 		.env.bot --> insert discord token
 
