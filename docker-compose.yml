@@ -15,6 +15,7 @@ services:
 
   api:
     image: "django-demo:dev"
+    restart: always
     build:
       target: development_build
       context: ./api
