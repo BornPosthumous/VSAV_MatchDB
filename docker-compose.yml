@@ -9,18 +9,41 @@ services:
     volumes:
       - matchdb-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 15432:5432
     env_file:
       - .env.db
 
   api:
-    build: ./api
+    image: "django-demo:dev"
+    build:
+      target: development_build
+      context: ./api
+      cache_from:
+        - "django-demo:dev"
+        - "django-demo:latest"
+        - "*"
+      args:
+        DJANGO_ENV: development
+    command: python -Wd manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.api
     depends_on:
       - postgres
-    env_file: 
-      ./.env.api
-    ports: 
-      - 7000:7000
+  # api:
+  #   build: ./api
+  #   depends_on:
+  #     - postgres
+  #   tty: true
+  #   working_dir: /usr/src/app
+  #   volumes:
+  #     - .:/usr/src/app
+  #   ports:
+  #     - 8000:8000
+  #   env_file:
+  #     - .env.api
+
 
   bot:
     build: ./bot
