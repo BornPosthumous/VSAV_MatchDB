@@ -31,6 +31,8 @@ services:
       - ./.env.api
     depends_on:
       - postgres
+    volumes:
+      - ./api:/code
   # api:
   #   build: ./api
   #   depends_on:
