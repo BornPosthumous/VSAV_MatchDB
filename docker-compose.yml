@@ -34,18 +34,6 @@ services:
       - postgres
     volumes:
       - ./api:/code
-  # api:
-  #   build: ./api
-  #   depends_on:
-  #     - postgres
-  #   tty: true
-  #   working_dir: /usr/src/app
-  #   volumes:
-  #     - .:/usr/src/app
-  #   ports:
-  #     - 8000:8000
-  #   env_file:
-  #     - .env.api
 
 
   bot:
