@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'vsav_match_api'
+    'matches'
 ]
 
 MIDDLEWARE = [

@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__', include(debug_toolbar.urls)),
     # User
-    path('vsav_match_api/', include('vsav_match_api.urls'))
+    path('vsav_info/', include('matches.urls'))
 ]
