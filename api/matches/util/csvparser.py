@@ -5,8 +5,6 @@ from itertools import islice
 from urllib import parse
 from ..enums import CharNames
 
-csv_path = "api/matches/util/match_db.csv"
-
 def get_stripped_url(url):
   try:
     parsed_url = parse.urlsplit(url)
@@ -42,21 +40,22 @@ def get_stripped_url(url):
     return
 
 
-valid_bulleta   = ["Bulleta", "B.B. Hood", "BU", "BB Hood", "BBHood"]
-valid_bishamon  = ["Bishamon", "BI"]
-valid_morrigan  = ["Morrigan", "MO"]
-valid_leilei    = ["Lei-Lei", "LeiLei", "Hsien-Ko", "HsienKo", "Lei Lei"]
-valid_aulbath   = ["Aulbath", "Fish", "AU", "Rikuo"]
-valid_qbee      = ["QB", "Q-Bee", "Bee", "QBee", "Q Bee"]
-valid_demitri   = ["Demitri", "DE"]
-valid_felicia   = ["FE", "Felicia", "Cat"]
-valid_jedah     = ["JE", "Jedah"]
-valid_anakaris  = ["Anakaris", "AN"]
-valid_lilith    = ["Lilith", "LI"]
-valid_sasquatch = ["Sasquatch", "SA","SAS"]
-valid_victor    = ["Victor", "VI"]
-valid_zabel     = ["Zabel", "ZA", "Raptor", "Zombie"]
-valid_gallon    = ["Gallon", "GA", "Talbain", "Wolf", "J Talbain", "JTalbain"]
+valid_bulleta   = {'enum_value_from_db' : CharNames.BU , 'aliases' : ["Bulleta", "B.B. Hood", "BU", "BB Hood", "BBHood"]}
+valid_bishamon  = {'enum_value_from_db' : CharNames.BI , 'aliases' : ["Bishamon", "BI"]}
+valid_morrigan  = {'enum_value_from_db' : CharNames.MO , 'aliases' : ["Morrigan", "MO"]}
+valid_leilei    = {'enum_value_from_db' : CharNames.LE , 'aliases' : ["Lei-Lei", "LeiLei", "Hsien-Ko", "HsienKo", "Lei Lei"]}
+valid_aulbath   = {'enum_value_from_db' : CharNames.AU , 'aliases' : ["Aulbath", "Fish", "AU", "Rikuo"]}
+valid_qbee      = {'enum_value_from_db' : CharNames.QB , 'aliases' : ["QB", "Q-Bee", "Bee", "QBee", "Q Bee", "Q. Bee"]}
+valid_demitri   = {'enum_value_from_db' : CharNames.DE , 'aliases' : ["Demitri", "DE"]}
+valid_felicia   = {'enum_value_from_db' : CharNames.FE , 'aliases' : ["FE", "Felicia", "Cat"]}
+valid_jedah     = {'enum_value_from_db' : CharNames.JE , 'aliases' : ["JE", "Jedah"]}
+valid_anakaris  = {'enum_value_from_db' : CharNames.AN , 'aliases' : ["Anakaris", "AN"]}
+valid_lilith    = {'enum_value_from_db' : CharNames.LI , 'aliases' : ["Lilith", "LI"]}
+valid_sasquatch = {'enum_value_from_db' : CharNames.SA , 'aliases' : ["Sasquatch", "SA","SAS"]}
+valid_victor    = {'enum_value_from_db' : CharNames.VI , 'aliases' : ["Victor", "VI"]}
+valid_zabel     = {'enum_value_from_db' : CharNames.ZA , 'aliases' : ["Zabel", "ZA", "Raptor", "Zombie"]}
+valid_gallon    = {'enum_value_from_db' : CharNames.GA , 'aliases' : ["Gallon", "GA", "Talbain", "Wolf", "J Talbain", "JTalbain", 'J. Talbain']}
+
 def get_char_enum_value_from_alias(char_string):
     try:
         char_string = char_string.casefold()
@@ -119,16 +118,3 @@ def get_dict_from_csv():
                 match_dict.append(db_item)
             
             return match_dict
-
-            # query_obj = Query()
-            # needle = db.search(query_obj.url == db_item['url'])
-            # if len(needle) == 0:
-            #     db.insert({'url':db_item['url'], 'matches_data': [db_item]})
-            # else:
-            #     print("noninit")
-            #     current_db_item = needle[0]
-            #     _current_matches = current_db_item['matches_data']
-            #     _current_matches.append(db_item)
-            #     current_db_item["matches_data"] = _current_matches
-            #     db.update(current_db_item, query_obj.url == db_item['url'])
-            #     print("added", db_item['timestamp'])

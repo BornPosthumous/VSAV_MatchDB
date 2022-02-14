@@ -1,3 +1,4 @@
+from difflib import Match
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.forms.models import model_to_dict
@@ -11,7 +12,6 @@ from django.core import serializers
 def seed_db_from_csv(request):
     items_to_add_dict = get_dict_from_csv()
     for tmp_match in items_to_add_dict:
-        print(tmp_match)
         tmp_match = Match_Info(
             type             = tmp_match['type'],
             url              = tmp_match['url'],
@@ -26,9 +26,14 @@ def seed_db_from_csv(request):
             winner           = tmp_match['winner'],
         )
         tmp_match.save()
-    print(items_to_add_dict)
+
     return JsonResponse(items_to_add_dict, safe=False)
 
+def delete_all_matches(self):
+    Match_Info.objects.all().delete()
+    return JsonResponse({'success' : True})
+
+#TODO: Get last N matches for fun!
 def get_last_five_matches(request):
     # all_entries = Match_Info.objects.all().values()
     last_five_entries = list(Match_Info.objects.order_by('entry_created_at')[:5].values())
@@ -46,7 +51,7 @@ def save_test_match(request):
         date_uploaded    = "2021-04-20 04:20",
         p1_name          = "N-Bee",
         p2_name          = "JayOneTheSk8",
-        winner           = enums.CharNames.AN,
+        winner           = enums.CharNames.SA,
     )
     match.save()
     return render( request, 'test.html', {
