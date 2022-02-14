@@ -34,9 +34,9 @@ def delete_all_matches(self):
     return JsonResponse({'success' : True})
 
 #TODO: Get last N matches for fun!
-def get_last_five_matches(request):
+def get_last_n_matches(request, number_of_matches):
     # all_entries = Match_Info.objects.all().values()
-    last_five_entries = list(Match_Info.objects.order_by('entry_created_at')[:5].values())
+    last_five_entries = list(Match_Info.objects.order_by('entry_created_at')[:number_of_matches].values())
     return JsonResponse(last_five_entries, safe=False)
 
 def save_test_match(request):
