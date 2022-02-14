@@ -9,5 +9,7 @@ urlpatterns = [
     path('delete_all', views.delete_all_matches),
     path('char/<str:charname>', views.get_matches_by_char),
     path('mu/<str:char_1>/<str:char_2>', views.get_matchup),
-    path('id/<uuid:match_uuid>', views.get_match_by_id)
+    path('id/<uuid:match_uuid>', views.get_match_by_id),
+    path('uploader/<str:uploader>', views.get_matches_by_uploader),
+    path('url', views.get_matches_from_video),
 ]

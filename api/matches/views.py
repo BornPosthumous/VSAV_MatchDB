@@ -38,13 +38,26 @@ def delete_all_matches(self):
 
 def get_last_n_matches(request, number_of_matches):
     # all_entries = Match_Info.objects.all().values()
-    last_five_entries = list(Match_Info.objects.order_by('entry_created_at')[:number_of_matches].values())
+    last_five_entries = list(
+        Match_Info.objects
+        .order_by('entry_created_at')[:number_of_matches]
+        .values()
+    )
     return JsonResponse(last_five_entries, safe=False)
 
 def get_match_by_id(request, match_uuid):
     match = Match_Info.objects.get(id=match_uuid)
     serialized_match = serializers.serialize('json', [match])
     return JsonResponse({'match' : serialized_match}, safe=False)
+
+def get_matches_from_video(request):
+    url = request.GET.getlist('url')[0]
+    matches_by_url = list(
+        Match_Info.objects.filter(Q(url=url))
+        .order_by('timestamp')
+        .values()
+    )
+    return JsonResponse(matches_by_url, safe=False)
 
 def get_matchup(request, char_1 , char_2 ): 
     p1 = alias_handler.get_char_enum_value_from_alias(char_1)
@@ -56,6 +69,16 @@ def get_matchup(request, char_1 , char_2 ):
                 .values()
         )
     return JsonResponse(matchup_listing, safe=False)
+
+def get_matches_by_uploader(request, uploader):
+    matches_with_event = list(
+        Match_Info.objects
+            .filter(Q(uploader=uploader))
+            .order_by('url')
+            .values()
+    )
+
+    return JsonResponse(matches_with_event, safe=False)
 
 def get_matches_by_char(request, charname):
     dealiased_charname = alias_handler.get_char_enum_value_from_alias(charname)
