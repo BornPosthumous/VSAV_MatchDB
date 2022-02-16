@@ -46,7 +46,7 @@ class Match_Info(models.Model):
         null=True
     )
     
-    winner = models.CharField(
+    winning_char = models.CharField(
         max_length=2,
         choices=enums.CharNames.choices,
         null=True
