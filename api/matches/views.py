@@ -32,7 +32,7 @@ from .serializers import UserSerializer
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'matches': reverse('match-list', request=request, format=format)
+        'matches': reverse('matches', request=request, format=format)
     })
 
 class MatchViewSet(viewsets.ModelViewSet):
@@ -71,15 +71,15 @@ class MatchViewSet(viewsets.ModelViewSet):
         """
             Get a listing of char1 vs char2
             Required Query Parameters:
-            char1: Character Short Name or Alias
-            char2: Character Short Name or Alias
+                char1: Character Short Name or Alias
+                char2: Character Short Name or Alias
         """
 
         query_params = request.query_params
         char1 = query_params.get('char1', None)
         char2 = query_params.get('char2', None)
         if char1 is None or char2 is None:
-            raise ValidationError("p1_char and p2_char must be provided")
+            raise ValidationError("char1 and char2 must be provided")
         # check aliases
         p1 = alias_handler.get_char_enum_value_from_alias(char1)
         p2 = alias_handler.get_char_enum_value_from_alias(char2)
@@ -110,7 +110,27 @@ class MatchViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @action(methods=['get'], detail=False, url_path='by-url', url_name='by_url' )
+    def by_url(self, request):
+        """
+            Get all timestamps from a video
+            Required Query Parameters:
+            ?url: A timestampable video
+        """
+        query_params = request.query_params
+        url = query_params.get('url', None)
+        
+        if url is None:
+            raise ValidationError("url must be provided")
+        
+        queryset = list(
+            Match_Info.objects.filter(Q(url=url) & Q(type=enums.MatchLinkType.VI))
+            .order_by('timestamp')
+            .values()
+        ) 
 
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
@@ -144,19 +164,6 @@ def seed_db_from_csv(request):
 def delete_all_matches(self):
     Match_Info.objects.all().delete()
     return JsonResponse({'success' : True})
-
-
-# TODO: Will this work for fc2 or throw error?
-def get_matches_from_video(request):
-    url = request.GET.getlist('url')[0]
-    matches_by_url = list(
-        Match_Info.objects.filter(Q(url=url))
-        .order_by('timestamp')
-        .values()
-    )
-    return JsonResponse(matches_by_url, safe=False)
-
-
 
 ##########################################################
 # Various ways of structuring rest framework auto APIs for Matches
