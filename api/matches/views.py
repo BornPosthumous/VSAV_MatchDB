@@ -32,7 +32,7 @@ from .serializers import UserSerializer
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'matches': reverse('matches', request=request, format=format)
+        'matches': reverse('matches-list', request=request, format=format)
     })
 
 class MatchViewSet(viewsets.ModelViewSet):
@@ -141,7 +141,7 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
-def seed_db_from_csv(request):
+def seed_test_data_from_csv(request):
     items_to_add_dict = get_dict_from_csv()
     for tmp_match in items_to_add_dict:
         tmp_match = Match_Info(
@@ -155,7 +155,7 @@ def seed_db_from_csv(request):
             date_uploaded    = tmp_match['date_uploaded'],
             p1_name          = tmp_match['p1_name'],
             p2_name          = tmp_match['p2_name'],
-            winner           = tmp_match['winner'],
+            winning_char     = tmp_match['winning_char'],
         )
         tmp_match.save()
 
