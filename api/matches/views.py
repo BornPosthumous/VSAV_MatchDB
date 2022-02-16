@@ -30,18 +30,79 @@ from .serializers import UserSerializer
 
 @api_view(['GET'])
 def api_root(request, format=None):
+    """
+    API Root Documentation. Please see the major routes below:
+
+    ### __Matches__: [/matches/](/vsav_info/matches/)
+  
+    ### __Users__: [/users/](/vsav_info/users/)
+    """
     return Response({
         'users': reverse('user-list', request=request, format=format),
         'matches': reverse('matches-list', request=request, format=format)
     })
 
 class MatchViewSet(viewsets.ModelViewSet):
+    """
+    Match Info Documentation 
+
+    Many Query Parameters require a valid character alias. Here is a list of valid aliases:
+
+        valid_bulleta   = ["Bulleta", "B.B. Hood", "BU", "BB Hood", "BBHood"]
+        valid_bishamon  = ["Bishamon", "BI"]
+        valid_morrigan  = ["Morrigan", "MO"]
+        valid_leilei    = ["Lei-Lei", "LeiLei", "Hsien-Ko", "HsienKo", "Lei Lei"]
+        valid_aulbath   = ["Aulbath", "Fish", "AU", "Rikuo"]
+        valid_qbee      = ["QB", "Q-Bee", "Bee", "QBee", "Q Bee"]
+        valid_demitri   = ["Demitri", "DE"]
+        valid_felicia   = ["FE", "Felicia", "Cat"]
+        valid_jedah     = ["JE", "Jedah"]
+        valid_anakaris  = ["Anakaris", "AN"]
+        valid_lilith    = ["Lilith", "LI"]
+        valid_sasquatch = ["Sasquatch", "SA","SAS"]
+        valid_victor    = ["Victor", "VI"]
+        valid_zabel     = ["Zabel", "ZA", "Raptor", "Zombie"]
+        valid_gallon    = ["Gallon", "GA", "Talbain", "Wolf", "J Talbain", "JTalbain"]
+
+    ### matches/by_character:
+    Search for matches that include the given character.
+
+    Query Params:
+
+    - __char__  : string = valid character alias.
+
+    Example : [matches/by-character?char=MO](/vsav_info/matches/by-character?char=MO)
+    
+    ### get-latest
+    Get last n matches
+
+    Search for matches that include the given character.
+
+    Query Params:
+
+    - number_of_matches__  : int = number to return
+
+    Example : [matches/get-latest?number_of_matches=5](/vsav_info/matches/get-latest?number_of_matches=5)
+
+    ### matches/get-matchup:
+    Search for matches that include the given character.
+
+    Query Params:
+
+    - __char1__: Character Short Name or Alias
+    - __char2__: Character Short Name or Alias
+   
+    Example : [matches/get-matchup/?char1=GA&char2=FE](/vsav_info/matches/get-matchup/?char1=GA&char2=FE)
+    
+    """
     queryset = Match_Info.objects.all()
     serializer_class = MatchSerializer
+    # Right now we are using uuid, and not DRFs default of primary key (pk:int)
+    # This sets up how the route for detail should be accessed
     lookup_url_kwarg = "uuid"
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # Add entry uploader on creation of match info 
+    # Add entry uploader on creation of match info item 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
 
@@ -94,6 +155,9 @@ class MatchViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, url_path='by-character', url_name='by_character' )
     def by_character(self, request):
+        """
+            Will list all of the urls that have been tagged with the character specified in the char query param.
+        """
         query_params = request.query_params
         char = query_params.get('char', None)
         if char is None:
