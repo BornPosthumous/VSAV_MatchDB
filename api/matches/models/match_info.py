@@ -65,5 +65,14 @@ class Match_Info(models.Model):
     entry_created_at = models.DateTimeField(default=timezone.now)
     entry_updated_at = models.DateTimeField(default=timezone.now)
 
+    # added by
+    added_by = models.ForeignKey('auth.User', related_name='matches', on_delete=models.CASCADE, null=True)
+
+    # def save(self, *args, **kwargs):
+    #     """
+    #     Save a match~
+    #     """
+    #     super.save(*args, **kwargs)
+
     def __str__(self):
         return f'<{self.__name__}> ${self.id} {self.url}'
