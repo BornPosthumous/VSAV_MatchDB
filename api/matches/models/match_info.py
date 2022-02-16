@@ -20,7 +20,7 @@ from .. import enums
 
 # p1_name?: string
 # p2_name?: string
-# winner?: boolean
+# winning_char?: Enum(CharacterEnum)
 
 # enum documentation: https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 # potential better way of doing enums : https://hackernoon.com/using-enum-as-model-field-choice-in-django-92d8b97aaa63
