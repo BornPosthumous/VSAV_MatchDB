@@ -1,4 +1,6 @@
 __pycache__/
 /.vscode/
 matchdb_be_bak/
-.env
+/config/.env.*
+!/config/.env.*.dummy
+/config/servers.json
