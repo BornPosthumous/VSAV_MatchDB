@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'matches'
 ]
+SITE_ID=1
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
