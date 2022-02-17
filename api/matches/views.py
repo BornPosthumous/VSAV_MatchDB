@@ -13,7 +13,7 @@ from rest_framework import generics, permissions
 
 from django.contrib.auth.models import User
 
-from .models.match_info import Match_Info
+from .models import MatchInfo
 from .serializers import MatchSerializer, UserSerializer
 
 from .util.csvparser import get_dict_from_csv
@@ -95,7 +95,7 @@ class MatchViewSet(viewsets.ModelViewSet):
     Example : [matches/get-matchup/?char1=GA&char2=FE](/vsav_info/matches/get-matchup/?char1=GA&char2=FE)
     
     """
-    queryset = Match_Info.objects.all()
+    queryset = MatchInfo.objects.all()
     serializer_class = MatchSerializer
     # Right now we are using uuid, and not DRFs default of primary key (pk:int)
     # This sets up how the route for detail should be accessed
@@ -165,7 +165,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         # check aliases
         dealiased_charname = alias_handler.get_char_enum_value_from_alias(char)
         queryset = list(
-                Match_Info.objects
+                MatchInfo.objects
                     .filter(Q(p1_char=dealiased_charname) | Q(p2_char=dealiased_charname) )
                     .order_by('entry_created_at')
                     .values()
@@ -188,7 +188,7 @@ class MatchViewSet(viewsets.ModelViewSet):
             raise ValidationError("url must be provided")
         
         queryset = list(
-            Match_Info.objects.filter(Q(url=url) & Q(type=enums.MatchLinkType.VI))
+            MatchInfo.objects.filter(Q(url=url) & Q(type=enums.MatchLinkType.VI))
             .order_by('timestamp')
             .values()
         ) 
@@ -208,7 +208,7 @@ class UserDetail(generics.RetrieveAPIView):
 def seed_test_data_from_csv(request):
     items_to_add_dict = get_dict_from_csv()
     for tmp_match in items_to_add_dict:
-        tmp_match = Match_Info(
+        tmp_match = MatchInfo(
             type             = tmp_match['type'],
             url              = tmp_match['url'],
             p1_char          = tmp_match['p1_char'],
@@ -219,21 +219,21 @@ def seed_test_data_from_csv(request):
             date_uploaded    = tmp_match['date_uploaded'],
             p1_name          = tmp_match['p1_name'],
             p2_name          = tmp_match['p2_name'],
-            winning_char     = tmp_match['winning_char'],
+            winning_char     = tmp_match['winner'],
         )
         tmp_match.save()
 
     return JsonResponse(items_to_add_dict, safe=False)
 
 def delete_all_matches(self):
-    Match_Info.objects.all().delete()
+    MatchInfo.objects.all().delete()
     return JsonResponse({'success' : True})
 
 ##########################################################
 # Various ways of structuring rest framework auto APIs for Matches
 ##########################################################
 # class MatchDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Match_Info.objects.all()
+#     queryset = MatchInfo.objects.all()
 #     serializer_class = MatchSerializer
 #     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 # class MatchList(
@@ -241,7 +241,7 @@ def delete_all_matches(self):
 #     mixins.CreateModelMixin,
 #     generics.GenericAPIView
 # ):
-#     queryset = Match_Info.objects.all()
+#     queryset = MatchInfo.objects.all()
 #     serializer_class = MatchSerializer
 
 #     def get(self, request, *args, **kwargs):
@@ -255,7 +255,7 @@ def delete_all_matches(self):
 #     List all matches, or create a new match.
 #     """
 #     def get(self, request, format=None):
-#         snippets = Match_Info.objects.all()
+#         snippets = MatchInfo.objects.all()
 #         serializer = MatchSerializer(snippets, many=True)
 #         return Response(serializer.data)
 
@@ -287,8 +287,8 @@ def delete_all_matches(self):
 #     """
 #     def get_object(self, match_uuid):
 #         try:
-#             match = Match_Info.objects.get(id=match_uuid)
-#         except Match_Info.DoesNotExist:
+#             match = MatchInfo.objects.get(id=match_uuid)
+#         except MatchInfo.DoesNotExist:
 #             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
 #     def get(self, request, match_uuid, format=None):
@@ -298,7 +298,7 @@ def delete_all_matches(self):
 
 #     def put(self, request, match_uuid, format=None):
 #         match = self.get_object(match_uuid)
-#         serializer = Match_Info(match, data=request.data)
+#         serializer = MatchInfo(match, data=request.data)
 #         if serializer.is_valid():
 #             serializer.save()
 #             return Response(serializer.data)

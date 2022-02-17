@@ -1,7 +1,8 @@
+from rest_framework import serializers
+
 from django.contrib.auth.models import User
 
-from rest_framework import serializers
-from .models.match_info import Match_Info
+from .models import MatchInfo 
 
 class MatchSerializer(serializers.HyperlinkedModelSerializer):
     added_by = serializers.ReadOnlyField(source='added_by.username')
@@ -9,7 +10,7 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.UUIDField()
 
     class Meta:
-        model = Match_Info
+        model = MatchInfo
         fields = [
             'id', 
             'type', 
