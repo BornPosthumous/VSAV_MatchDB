@@ -4,9 +4,6 @@ from django.db import models
 from django.utils import timezone
 
 from . import enums
-# from asyncio.windows_events import NULL
-# from date import datetime 
-
 
 # id: UUID
 # type: Enum(Video/Fightcade)
@@ -53,19 +50,20 @@ class MatchInfo(models.Model):
         choices=enums.CharNames.choices,
         null=True
     )
+
     # P1/P2 
     p1_name = models.TextField(max_length=100, default='')
     p2_name = models.TextField(max_length=100, default='')
 
     # YT info
-    uploader = models.TextField(max_length=100, default='')
-    date_uploaded = models.DateTimeField(default=timezone.now)
     timestamp = models.IntegerField(default=0)
+    uploader = models.TextField(max_length=100, default='')
+    date_uploaded = models.DateTimeField(default=timezone.now) # timezone.now as a placeholder
     video_title = models.TextField(max_length=100, default='')
 
     # db internal
-    entry_created_at = models.DateTimeField(default=timezone.now)
-    entry_updated_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
 
     # added by
     added_by = models.ForeignKey('auth.User', related_name='matches', on_delete=models.CASCADE, null=True)

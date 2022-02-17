@@ -12,21 +12,14 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MatchInfo
         fields = [
-            'id', 
-            'type', 
+            'type',
             'url',
             'p1_char',
             'p2_char',
             'winning_char',
             'p1_name',
             'p2_name',
-            'uploader',
-            'date_uploaded',
-            'timestamp',
-            'video_title',
-            'entry_created_at',
-            'entry_updated_at',
-            'added_by'
+            'timestamp'
         ]
 
     def validate(self, data):
