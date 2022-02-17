@@ -1,8 +1,9 @@
 import uuid
 
+from urllib import parse
+
 from django.db import models
 from django.forms import ValidationError
-from django.utils import timezone
 
 from . import enums
 
@@ -24,6 +25,10 @@ from . import enums
 
 # enum documentation: https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 # potential better way of doing enums : https://hackernoon.com/using-enum-as-model-field-choice-in-django-92d8b97aaa63
+ALLOWED_YT_NETLOCS = [
+    "www.youtube.com"
+]
+
 class MatchInfo(models.Model):
     # Basic id
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -72,11 +77,32 @@ class MatchInfo(models.Model):
     # added by
     added_by = models.ForeignKey('auth.User', related_name='matches', on_delete=models.CASCADE, null=True)
 
-    def save(self, *args, **kwargs):
+    def validate_winning_char(self):
+        if self.winning_char and self.winning_char not in [self.p1_char, self.p2_char]:
+            raise ValidationError('Winning character must be played by p1 or p2')
+
+    def validate_required_fields(self):
         if not self.type or not self.url:
             raise ValidationError('MatchInfo requires a type/url')
-        super(MatchInfo, self).save(*args, **kwargs)
-             
 
-    # def __str__(self):
-    #     return f'<{self.__name__}> ${self.id} {self.url}'
+    def validate_youtube_match(self):
+        # If record is a video
+        if self.type == enums.MatchLinkType.VI:
+            parsed_url = parse.urlsplit(self.url)
+            # If the video is a YouTube video
+            if parsed_url.netloc in ALLOWED_YT_NETLOCS:
+                # It must have and uploader, date uploaded, and video title
+                if not self.uploader or not self.date_uploaded or not self.video_title:
+                    raise ValidationError('MatchInfo YouTube video must have metadata')
+
+    def save(self, *args, **kwargs):
+        self.validate_required_fields()
+        self.validate_youtube_match()
+        self.validate_winning_char()
+        super(MatchInfo, self).save(*args, **kwargs)
+
+    class Meta:
+        unique_together = ['url', 'timestamp']
+
+    def __str__(self):
+        return f'<{self.__class__.__name__}> ${self.id} {self.url}'
