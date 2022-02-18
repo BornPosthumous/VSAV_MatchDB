@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'debug_toolbar',
     'rest_framework',
-    'matches'
+    'matchdb',
+    'matchdb.matches'
 ]
 SITE_ID=1
 
