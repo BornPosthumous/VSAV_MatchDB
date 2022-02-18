@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'matchdb',
-    'matchdb.matches'
+    'matchdb.matches',
+    'matchdb.users'
 ]
 SITE_ID=1
 
@@ -109,7 +110,8 @@ DATABASES = {
     }
 }
 
-
+# Auth
+AUTH_USER_MODEL = 'users.User'
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
