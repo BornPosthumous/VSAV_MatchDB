@@ -11,10 +11,8 @@ from django.db.models import Q
 
 from rest_framework import generics, permissions
 
-from django.contrib.auth.models import User
-
 from .models import MatchInfo
-from .serializers import MatchSerializer, UserSerializer
+from .serializers import MatchSerializer
 
 from .util.csvparser import get_dict_from_csv
 from . import enums
@@ -26,19 +24,14 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import permissions
 
-from .serializers import UserSerializer
-
 @api_view(['GET'])
 def api_root(request, format=None):
     """
     API Root Documentation. Please see the major routes below:
 
     ### __Matches__: [/matches/](/vsav_info/matches/)
-  
-    ### __Users__: [/users/](/vsav_info/users/)
     """
     return Response({
-        'users': reverse('user-list', request=request, format=format),
         'matches': reverse('matches-list', request=request, format=format)
     })
 
@@ -195,15 +188,6 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
 
 def seed_test_data_from_csv(request):
     items_to_add_dict = get_dict_from_csv()

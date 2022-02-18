@@ -8,7 +8,7 @@ from django.forms import ValidationError
 from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
 
 from .enums import MatchLinkType, CharNames
-
+from django.conf import settings
 # id: UUID
 # type: Enum(Video/Fightcade)
 # url: string
@@ -78,7 +78,7 @@ class MatchInfo(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
 
     # added by
-    added_by = models.ForeignKey('auth.User', related_name='matches', on_delete=models.CASCADE, null=True)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='matches', on_delete=models.CASCADE, null=True)
 
     def validate_winning_char(self):
         if self.winning_char and self.winning_char not in [self.p1_char, self.p2_char]:

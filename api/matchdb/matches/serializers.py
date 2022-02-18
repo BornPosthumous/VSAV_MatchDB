@@ -1,7 +1,6 @@
 from multiprocessing.spawn import import_main_path
 from urllib import parse
 
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
@@ -51,10 +50,4 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
         self.validate_youtube_match(data)
         return data
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    matches = serializers.HyperlinkedRelatedField(many=True, view_name='match-detail', read_only=True)
-
-    class Meta:
-        model =  User
-        fields = ['url','id','username','matches']
 

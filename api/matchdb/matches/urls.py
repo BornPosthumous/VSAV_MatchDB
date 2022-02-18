@@ -10,8 +10,6 @@ urlpatterns = [
     path('', views.api_root),
     path('seed_db_from_csv', views.seed_test_data_from_csv),
     path('delete_all', views.delete_all_matches),
-    path('users/', views.UserList.as_view(), name='user-list'),
-    path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail'),
 ]
 urlpatterns += match_router.urls
 # urlpatterns = format_suffix_patterns(urlpatterns)
