@@ -111,7 +111,7 @@ DATABASES = {
 }
 
 # Auth
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'matchdb_users.CustomUser'
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
