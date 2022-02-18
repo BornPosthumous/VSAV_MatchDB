@@ -5,7 +5,7 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.forms import ValidationError
 
-from constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
+from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
 
 from .models import MatchInfo
 from .enums import MatchLinkType, CharNames
