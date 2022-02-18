@@ -5,7 +5,7 @@ from urllib import parse
 from django.db import models
 from django.forms import ValidationError
 
-from constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
+from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
 
 from .enums import MatchLinkType, CharNames
 

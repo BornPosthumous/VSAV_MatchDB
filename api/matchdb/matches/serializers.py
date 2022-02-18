@@ -4,7 +4,7 @@ from urllib import parse
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
+from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
 
 from .models import MatchInfo, ALLOWED_YT_NETLOCS
 from .enums import MatchLinkType
