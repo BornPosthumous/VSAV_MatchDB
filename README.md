@@ -28,18 +28,22 @@ Type $help to see all features!
 
 ## Running
 Run with Docker-Compose in root directory
-	docker-compose up
+		docker-compose up
 
 Make sure to log in to the docker container and run the Django migrations!
+
 		docker-exec -it <containername> bash 
 		manage.py migrate
 
-PGAdmin should be on http://localhost:8080. You can login with the username/pass set in your servers.json
+PGAdmin should be on `http://localhost:8080`. You can login with the username/pass set in your servers.json
 
-You can view the API documentation at http://localhost:8000/vsav_info/matches/ .
+You can view the API documentation at `http://localhost:8000/vsav_info/matches/` .
 If you'd like some dummy data, you may edit the following file:
+
 		api/matchdb/match_db/util/match_db.csv
+
 And make a get request to:
+
 `http://localhost:8000/vsav_info/matches/seed_db_from_csv`
 
 Discord bot should be connected if your token and bot setup is correct.
