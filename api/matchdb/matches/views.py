@@ -1,3 +1,5 @@
+import os
+
 from ast import Not
 from difflib import Match
 from nis import match
@@ -23,6 +25,7 @@ from rest_framework.decorators import action,api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import permissions
+from googleapiclient.discovery import build
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -97,6 +100,26 @@ class MatchViewSet(viewsets.ModelViewSet):
 
     # Add entry uploader on creation of match info item 
     def perform_create(self, serializer):
+        video_url = self.request.data.get('url')
+
+        # make sure its a yt url with the regex
+        if serializer.is_youtube_url(video_url):
+            # parse out the query parameter "v" for the youtube id
+            serializer.get_youtube_video_id(video_url)
+
+            # call youtube api
+            yt_service = build('youtube', 'v3', developerKey=os.environ['YOUTUBE_API_KEY'])
+            video_details = yt_service.videos().list(part='snippet', id='')
+
+            # get details from video (upload date, video title, uploader)
+            uploader = video_details['items'][0]['snippet']['channelTitle']
+            date_uploaded = video_details['items'][0]['snippet']['publishedAt']
+            video_title = video_details['items'][0]['snippet']['title']
+
+            # pass this into the match model
+            serializer.save(date_uploaded=date_uploaded)
+            serializer.save(video_title=video_title)
+            serializer.save(uploader=uploader)
         serializer.save(added_by=self.request.user)
 
     @action(methods=['get'], detail=False, url_path='get-latest', url_name='get_latest' )
