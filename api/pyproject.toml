@@ -21,6 +21,7 @@ coreapi = "^2.3.3"
 djangorestframework-simplejwt = "^5.0.0"
 django-filter = "^21.1"
 django-cors-headers = "^3.11.0"
+debugpy = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
 
