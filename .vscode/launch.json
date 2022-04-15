@@ -25,7 +25,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Django",
+            "name": "Dbg Django: Local Attach",
+            "type": "python",
+            "request": "attach",
+            "connect": {
+              "host": "localhost",
+              "port": 3000
+            }
+          },
+        {
+            "name": "Dbg Django: Docker Attach",
             "type": "python",
             "request": "attach",
             "pathMappings": [
@@ -53,4 +62,4 @@
             }
         }
     ]
-  }
+}
