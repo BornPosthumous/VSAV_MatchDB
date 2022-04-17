@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-v*sbnbo)ja@1!z1)8rt0hcwl)wp_r0q96f=4^zgp^%1%!nis0+
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1', 'localhost'
+    '127.0.0.1', 'localhost', '0.0.0.0', 'http://localhost'
 ]
 
 # Application definition
