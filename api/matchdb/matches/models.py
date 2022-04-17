@@ -64,8 +64,8 @@ class MatchInfo(models.Model):
     )
 
     # P1/P2 
-    p1_name = models.TextField(max_length=100, default='', blank=True)
-    p2_name = models.TextField(max_length=100, default='', blank=True)
+    p1_name = models.TextField(max_length=100, default='')
+    p2_name = models.TextField(max_length=100, default='')
 
     # YT info
     timestamp = models.IntegerField(default=0)

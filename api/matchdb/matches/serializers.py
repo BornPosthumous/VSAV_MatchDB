@@ -15,6 +15,11 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
 
     added_by = serializers.ReadOnlyField(source='added_by.username', read_only=True)
     id = serializers.UUIDField(read_only=True)
+    p1_name = serializers.CharField(allow_blank=True)
+    p2_name = serializers.CharField(allow_blank=True)
+    video_title = serializers.CharField(allow_blank=True)
+    uploader = serializers.CharField(allow_blank=True)
+    date_uploaded = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = MatchInfo
