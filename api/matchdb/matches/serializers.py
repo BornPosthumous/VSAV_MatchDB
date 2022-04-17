@@ -1,8 +1,4 @@
-import re
-
-from multiprocessing.spawn import import_main_path
-from urllib.parse import urlparse, parse_qs
-from urllib import parse
+from urllib.parse import urlsplit
 
 from rest_framework import serializers
 
@@ -51,7 +47,7 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
     def validate_youtube_match(self, data):
         # If record is a video
         if data['type'] == MatchLinkType.VI:
-            parsed_url = parse.urlsplit(data['url'])
+            parsed_url = urlsplit(data['url'])
             # If the video is a YouTube video
             if parsed_url.netloc in ALLOWED_YT_NETLOCS:
                 # It must have and uploader, date uploaded, and video title
@@ -66,12 +62,3 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
         self.validate_required_fields(data)
         self.validate_youtube_match(data)
         return data
-
-    def get_youtube_video_id(self, yt_url):
-        parsed_url = urlparse(yt_url)
-        return parse_qs(parsed_url.query)['v'][0]
-
-    def is_youtube_url(self, url):
-        youtube_regex = r'(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)'
-        youtube_regex_match = re.match(youtube_regex, url)
-        return bool(youtube_regex_match)

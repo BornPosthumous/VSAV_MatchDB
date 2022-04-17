@@ -1,30 +1,24 @@
 import os
 
-from ast import Not
-from difflib import Match
-from nis import match
 from django.forms import ValidationError
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import render
-from django.forms.models import model_to_dict
+from django.http import JsonResponse
 from django.core import serializers
 from django.db.models import Q
 
-from rest_framework import generics, permissions
+from rest_framework import permissions
+from rest_framework import viewsets, status
+from rest_framework import permissions
+from rest_framework.decorators import action,api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework import permissions
 
 from .models import MatchInfo
 from .serializers import MatchSerializer
 
 from .util.csvparser import get_dict_from_csv
 from . import enums
-from .util import alias_handler
-from rest_framework import viewsets, status
-from rest_framework import permissions, generics
-from rest_framework.decorators import action,api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework import permissions
-from googleapiclient.discovery import build
+from .util import alias_handler, youtube
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -99,26 +93,13 @@ class MatchViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         video_url = request.data.get('url')
-        # make sure its a yt url with the regex
-        
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_youtube_url(video_url):
-            # parse out the query parameter "v" for the youtube id
-            yt_id = serializer.get_youtube_video_id(video_url)
-
-            # call youtube api
-            yt_service = build('youtube', 'v3', developerKey=os.environ['YOUTUBE_API_KEY'])
-            response = yt_service.videos().list(part='snippet', id=yt_id).execute()
-            # print(response['items'][0]['snippet'])
-            video_details = response['items'][0]['snippet']
-            uploader = video_details['channelTitle']
-            date_uploaded = video_details['publishedAt']
-            video_title = video_details['title']
-
+        if youtube.is_youtube_url(video_url):
+            video_details = youtube.request_video_details(video_url)
             # pass this into the match model
-            request.data['uploader'] = uploader
-            request.data['date_uploaded'] = date_uploaded
-            request.data['video_title'] = video_title
+            request.data['uploader'] = video_details['uploader']
+            request.data['date_uploaded'] = video_details['date_uploaded']
+            request.data['video_title'] = video_details['video_title']
 
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -128,6 +109,19 @@ class MatchViewSet(viewsets.ModelViewSet):
     # Add entry uploader on creation of match info item 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
+
+    @action(methods=['get'], detail=False, url_path='get-yt-info', url_name='get_yt_info' )
+    def get_yt_info(self, request):
+        video_url = request.data.get('url')
+        if youtube.is_youtube_url(video_url):
+            video_details = youtube.request_video_details(video_url)
+            # pass this into the match model
+            resp = {
+                'uploader' : video_details.uploader,
+                'date_uploaded': video_details.date_uploaded,
+                'video_title' : video_details.video_title,
+            }
+            return Response(resp, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=False, url_path='get-latest', url_name='get_latest' )
     def get_latest(self, request):
