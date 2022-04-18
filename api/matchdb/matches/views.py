@@ -110,16 +110,16 @@ class MatchViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
 
-    @action(methods=['get'], detail=False, url_path='get-yt-info', url_name='get_yt_info' )
+    @action(methods=['post'], detail=False, url_path='get-yt-info', url_name='get_yt_info' )
     def get_yt_info(self, request):
         video_url = request.data.get('url')
         if youtube.is_youtube_url(video_url):
             video_details = youtube.request_video_details(video_url)
             # pass this into the match model
             resp = {
-                'uploader' : video_details.uploader,
-                'date_uploaded': video_details.date_uploaded,
-                'video_title' : video_details.video_title,
+                'uploader' : video_details['uploader'],
+                'date_uploaded': video_details['date_uploaded'],
+                'video_title' : video_details['video_title'],
             }
             return Response(resp, status=status.HTTP_201_CREATED)
 
