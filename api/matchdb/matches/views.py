@@ -110,7 +110,7 @@ class MatchViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
 
-    @action(methods=['post'], detail=False, url_path='get-yt-info', url_name='get_yt_info',permission_classes=[])
+    @action(methods=['post'], detail=False, url_path='get-yt-info', url_name='get_yt_info', permission_classes=[] )
     def get_yt_info(self, request):
         video_url = request.data.get('url')
         if youtube.is_youtube_url(video_url):
@@ -123,7 +123,7 @@ class MatchViewSet(viewsets.ModelViewSet):
             }
             return Response(resp, status=status.HTTP_201_CREATED)
 
-    @action(methods=['get'], detail=False, url_path='get-latest', url_name='get_latest' )
+    @action(methods=['get'], detail=False, url_path='get-latest', url_name='get_latest', permission_classes=[])
     def get_latest(self, request):
         """
             Get the last n matches
@@ -144,7 +144,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         else:
             raise ValidationError("Number_of_matches must be an integer")
 
-    @action(methods=['get'], detail=False, url_path='get-matchup', url_name='get_matchup' )
+    @action(methods=['get'], detail=False, url_path='get-matchup', url_name='get_matchup', permission_classes=[] )
     def get_matchup(self, request):
         """
             Get a listing of char1 vs char2
@@ -170,7 +170,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(methods=['get'], detail=False, url_path='by-character', url_name='by_character' )
+    @action(methods=['get'], detail=False, url_path='by-character', url_name='by_character', permission_classes=[] )
     def by_character(self, request):
         """
             Will list all of the urls that have been tagged with the character specified in the char query param.
@@ -191,7 +191,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(methods=['get'], detail=False, url_path='by-url', url_name='by_url' )
+    @action(methods=['get'], detail=False, url_path='by-url', url_name='by_url', permission_classes=[])
     def by_url(self, request):
         """
             Get all timestamps from a video
