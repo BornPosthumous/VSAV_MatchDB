@@ -1,10 +1,11 @@
 from urllib.parse import urlsplit
 
 from rest_framework import serializers
+from matchdb.matches.util.youtube import is_youtube_url
 
-from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
+from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_LINK_NOT_VALID_ERROR, YOUTUBE_METADATA_ERROR
 
-from .models import MatchInfo, ALLOWED_YT_NETLOCS
+from .models import MatchInfo
 from .enums import MatchLinkType
 
 class MatchSerializer(serializers.HyperlinkedModelSerializer):
@@ -13,9 +14,9 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.UUIDField(read_only=True)
     p1_name = serializers.CharField(allow_blank=True)
     p2_name = serializers.CharField(allow_blank=True)
-    video_title = serializers.CharField(allow_blank=True)
-    uploader = serializers.CharField(allow_blank=True)
-    date_uploaded = serializers.CharField(allow_blank=True)
+    video_title = serializers.CharField(allow_blank=True, required=False)
+    uploader = serializers.CharField(allow_blank=True, required=False)
+    date_uploaded = serializers.CharField(allow_blank=True, required=False)
 
     class Meta:
         model = MatchInfo
@@ -48,8 +49,11 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
         # If record is a video
         if data['type'] == MatchLinkType.VI:
             parsed_url = urlsplit(data['url'])
+            if not is_youtube_url(parsed_url):
+                raise serializers.ValidationError(YOUTUBE_LINK_NOT_VALID_ERROR)
+
             # If the video is a YouTube video
-            if parsed_url.netloc in ALLOWED_YT_NETLOCS:
+            if is_youtube_url(parsed_url):
                 # It must have and uploader, date uploaded, and video title
                 missing_uploader = 'uploader' in data and data['uploader'] is None
                 missing_date_uploaded = 'date_uploaded' in data and data['date_uploaded'] is None

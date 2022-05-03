@@ -110,7 +110,7 @@ class MatchViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
 
-    @action(methods=['post'], detail=False, url_path='get-yt-info', url_name='get_yt_info' )
+    @action(methods=['post'], detail=False, url_path='get-yt-info', url_name='get_yt_info',permission_classes=[])
     def get_yt_info(self, request):
         video_url = request.data.get('url')
         if youtube.is_youtube_url(video_url):
@@ -136,7 +136,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         if num_to_get is not None:
             try:
                 num_to_get = int(num_to_get)
-                queryset = self.queryset.order_by('entry_created_at')[:num_to_get].values()
+                queryset = self.queryset.order_by('created_at')[:num_to_get].values()
                 serializer = self.get_serializer(queryset, many=True)
                 return Response(serializer.data)
             except:
@@ -164,7 +164,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         queryset = list(
             self.queryset
                 .filter((Q(p1_char=p1) & Q( p2_char=p2 ) | Q(p1_char=p2) & Q( p2_char=p1 )) )
-                .order_by('entry_created_at')
+                .order_by('created_at')
                 .values()
         )
         serializer = self.get_serializer(queryset, many=True)
@@ -184,7 +184,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         queryset = list(
                 MatchInfo.objects
                     .filter(Q(p1_char=dealiased_charname) | Q(p2_char=dealiased_charname) )
-                    .order_by('entry_created_at')
+                    .order_by('created_at')
                     .values()
             )
 

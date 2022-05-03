@@ -4,8 +4,9 @@ from urllib import parse
 
 from django.db import models
 from django.forms import ValidationError
+from matchdb.matches.util.youtube import is_youtube_url
 
-from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_METADATA_ERROR
+from matchdb.constants.errors import WINNING_CHAR_ERROR, MATCHINFO_REQUIREMENT_ERROR, YOUTUBE_LINK_NOT_VALID_ERROR, YOUTUBE_METADATA_ERROR
 
 from .enums import MatchLinkType, CharNames
 from django.conf import settings
@@ -28,9 +29,6 @@ from django.conf import settings
 # enum documentation: https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
 # potential better way of doing enums : https://hackernoon.com/using-enum-as-model-field-choice-in-django-92d8b97aaa63
 # ^ seems to be based on old way of handling Enums
-ALLOWED_YT_NETLOCS = [
-    "www.youtube.com"
-]
 
 class MatchInfo(models.Model):
     # Basic id
@@ -92,8 +90,11 @@ class MatchInfo(models.Model):
         # If record is a video
         if self.type == MatchLinkType.VI:
             parsed_url = parse.urlsplit(self.url)
+            if not is_youtube_url(parsed_url):
+                raise ValidationError(YOUTUBE_LINK_NOT_VALID_ERROR)
+
             # If the video is a YouTube video
-            if parsed_url.netloc in ALLOWED_YT_NETLOCS:
+            if is_youtube_url(parsed_url):
                 # It must have and uploader, date uploaded, and video title
                 if not self.uploader or not self.date_uploaded or not self.video_title:
                     raise ValidationError(YOUTUBE_METADATA_ERROR)

@@ -5,14 +5,15 @@ from googleapiclient.discovery import build
 
 yt_service = build('youtube', 'v3', developerKey=os.environ['YOUTUBE_API_KEY'])
 
+youtube_regex = r'^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$'
+
 def is_youtube_url(url):
-    youtube_regex = r'(https?:\/\/)?((www\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-z-]+)'
     youtube_regex_match = re.match(youtube_regex, url)
     return bool(youtube_regex_match)
 
 def get_youtube_video_id(yt_url):
-    parsed_url = urlparse(yt_url)
-    return parse_qs(parsed_url.query)['v'][0]
+    youtube_regex_match = re.match(youtube_regex, yt_url)
+    return youtube_regex_match[6]
 
 # helpful link: https://medium.com/mcd-unison/youtube-data-api-v3-in-python-tutorial-with-examples-e829a25d2ebd
 def request_video_details(video_url):
