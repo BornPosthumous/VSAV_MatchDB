@@ -100,9 +100,9 @@ class MatchInfo(models.Model):
                     raise ValidationError(YOUTUBE_METADATA_ERROR)
 
     def save(self, *args, **kwargs):
-        self.validate_required_fields()
-        self.validate_youtube_match()
-        self.validate_winning_char()
+        # self.validate_required_fields()
+        # self.validate_youtube_match()
+        # self.validate_winning_char()
         super(MatchInfo, self).save(*args, **kwargs)
 
     def __str__(self):

@@ -1,15 +1,14 @@
 {
     "Servers": {
       "1": {
-        "Name": "vsav_info",
+        "Name": "tempdb",
         "Group": "Servers",
         "Host": "postgres",
         "Port": 5432,
         "MaintenanceDB": "postgres",
-        "Username": "leilei",
+        "Username": "enbychulo",
         "SSLMode": "prefer",
-        "PassFile": "/pgpass"
-      }
+        "PassFile": "/var/lib/pgadmin/pgpass"      }
     }
   }
   

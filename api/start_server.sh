@@ -1,6 +1,6 @@
 #!/bin/bash
-docker-compose down --remove-orphans
-docker-compose up --build -d pgadmin postgres
+docker compose down --remove-orphans
+docker compose up --build --force-recreate -d pgadmin postgres
 SQL_HOST_FROM_CONTAINER=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres_container`
 cd ../config
 if [ -f .env.api ]
